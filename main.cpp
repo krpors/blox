@@ -4,9 +4,14 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "level.hpp"
 #include "text.hpp"
 
 int main() {
+	Tmx::Map map;
+	map.ParseFile("map01.tmx");
+
+
 	std::shared_ptr<ImageFont> font = std::make_shared<ImageFont>(
 		"font.png",
 		" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");

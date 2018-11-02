@@ -1,6 +1,7 @@
 CC = $(CXX)
 CXXFLAGS = -std=c++11 -Wall -pedantic -MMD -MP
-LDLIBS = $(shell pkg-config --libs sfml-all)
+LDLIBS =  $(shell pkg-config --libs sfml-all)
+LDLIBS += $(shell pkg-config --libs tmxparser)
 
 sources = $(wildcard *.cpp)
 
