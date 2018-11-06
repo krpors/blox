@@ -11,8 +11,8 @@ private:
 	sf::Texture texture;
 	sf::VertexArray varray;
 
-	const sf::IntRect getTextureRectForTileId(const Tmx::Tileset* const tileset, const int tileid) const;
-	void addTileQuad(const sf::IntRect& positionRect, const sf::IntRect& textureRect);
+	const sf::FloatRect getTextureRectForTile(const Tmx::Tileset* const tileset, const Tmx::MapTile& tile) const;
+	void addTileQuad(int x, int y, const Tmx::Tileset* tileset, const Tmx::MapTile& tile);
 public:
 	Map();
 	~Map();
