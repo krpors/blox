@@ -12,7 +12,9 @@ private:
 	sf::VertexArray varray;
 
 	const sf::FloatRect getTextureRectForTile(const Tmx::Tileset* const tileset, const Tmx::MapTile& tile) const;
-	void addTileQuad(int x, int y, const Tmx::Tileset* tileset, const Tmx::MapTile& tile);
+	void addTileQuad(int x, int y, const Tmx::TileLayer* const tileLayer, const Tmx::Tileset* const tileset, const Tmx::MapTile& tile);
+
+	void swap(sf::Vector2f& a, sf::Vector2f& b) const;
 public:
 	Map();
 	~Map();

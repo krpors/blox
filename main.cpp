@@ -47,9 +47,9 @@ int main() {
 
 		window.clear();
 		// window.draw(shape);
-		// window.draw(t1);
-		// window.draw(t2);
 		window.draw(lolmap);
+		window.draw(t1);
+		window.draw(t2);
 		window.display();
 	}
 
