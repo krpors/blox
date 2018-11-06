@@ -46,9 +46,10 @@ int main() {
 		t2.setText(0, 10, ss.str());
 
 		window.clear();
-		window.draw(shape);
-		window.draw(t1);
-		window.draw(t2);
+		// window.draw(shape);
+		// window.draw(t1);
+		// window.draw(t2);
+		window.draw(lolmap);
 		window.display();
 	}
 

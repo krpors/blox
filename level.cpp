@@ -6,6 +6,8 @@
 
 Map::Map() {
 	std::cout << "Creating map" << std::endl;
+	
+	varray.setPrimitiveType(sf::Quads);
 }
 
 Map::~Map() {
@@ -26,7 +28,17 @@ void Map::load(const std::string& file) {
 		throw "failed to load tmx map";
 	}
 
-	sf::VertexArray arr;
+	if (tmxMap.GetNumTilesets() != 1) {
+		throw "expected only one tileset for now";
+	}
+
+	const Tmx::Tileset* ts = tmxMap.GetTileset(0);
+	const std::string& src = ts->GetImage()->GetSource();
+	std::clog << "Image source is " << src << std::endl;
+	if (!this->texture.loadFromFile(src)) {
+		throw "failed to load texture from tilemap";
+	}
+
 
 	for (int i = 0; i < this->tmxMap.GetNumTileLayers(); i++) {
 		const Tmx::TileLayer* layer = this->tmxMap.GetTileLayer(i);
@@ -56,7 +68,6 @@ void Map::load(const std::string& file) {
 				}
 			}
 		}
-		break;
 	}
 
 
@@ -83,8 +94,6 @@ void Map::addTileQuad(const sf::IntRect& positionRect, const sf::IntRect& textur
 	this->varray.append(topright);
 	this->varray.append(bottomright);
 	this->varray.append(bottomleft);
-
-	std::cout << this->varray.getVertexCount() << std::endl;
 }
 
 const sf::IntRect Map::getTextureRectForTileId(const Tmx::Tileset* const tileset, const int tileid) const {
@@ -98,4 +107,19 @@ const sf::IntRect Map::getTextureRectForTileId(const Tmx::Tileset* const tileset
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	states.texture = &this->texture;
+
+	// sf::VertexArray varr(sf::Quads);
+	// sf::Vertex tl(sf::Vector2f(100, 100), sf::Vector2f(0, 0));
+	// // tl.color = sf::Color::Red;
+	// sf::Vertex tr(sf::Vector2f(200, 100), sf::Vector2f(32, 0));
+	// sf::Vertex br(sf::Vector2f(200, 200), sf::Vector2f(32, 32));
+	// sf::Vertex bl(sf::Vector2f(100, 200), sf::Vector2f(0, 32));
+	// // bl.color = sf::Color::Blue;
+	// varr.append(tl);
+	// varr.append(tr);
+	// varr.append(br);
+	// varr.append(bl);
+
+	target.draw(this->varray, states);
 }

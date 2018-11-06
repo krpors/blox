@@ -7,6 +7,8 @@
 class Map : public sf::Drawable {
 private:
 	Tmx::Map tmxMap;
+
+	sf::Texture texture;
 	sf::VertexArray varray;
 
 	const sf::IntRect getTextureRectForTileId(const Tmx::Tileset* const tileset, const int tileid) const;
