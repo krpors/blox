@@ -68,7 +68,6 @@ void Map::addTileQuad(int x, int y, const Tmx::TileLayer* const layer, const Tmx
 
 	unsigned int opacity = layer->GetOpacity() * 255;
 	sf::Color color = sf::Color(0xff, 0xff, 0xff, opacity);
-	std::cout << layer->GetOpacity() << std::endl;
 
 	sf::Vertex topleft;
 	sf::Vertex topright;
