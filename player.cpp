@@ -10,7 +10,7 @@ Player::Player() {
 	this->prect = { 0, 0, 16, 16 };
 	this->playerSprite.setTexture(this->texture);
 	this->playerSprite.setTextureRect(this->prect);
-	this->playerSprite.setScale({ 4, 4 });
+	this->playerSprite.setScale({ 2, 2 });
 }
 
 Player::~Player() {
@@ -36,13 +36,13 @@ void Player::handleEvent(const sf::Event& event) {
 void Player::update(const sf::Time& dt) {
 	sf::Vector2f pos = this->playerSprite.getPosition();
 	if (this->moveLeft) {
-		pos.x -= 0.2 * dt.asMilliseconds();
+		pos.x -= 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 	if (this->moveRight) {
-		pos.x += 0.2f * dt.asMilliseconds();
+		pos.x += 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 
-	if (pos.x > 0 && pos.x < 800.0f) {
+	if (pos.x > 0 && pos.x < 800.0f - (32)) {
 		this->playerSprite.setPosition(pos);
 	}
 }
