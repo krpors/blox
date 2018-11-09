@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 
 #include <tmxparser/Tmx.h>
@@ -44,6 +45,7 @@ void Map::load(const std::string& file) {
 
 		std::cout << "Drawing layer " << layer->GetName() << std::endl;
 		if (layer->GetName() == "Collision") {
+			this->collisionLayer = layer;
 			// for now, don't draw the collision layer.
 			continue;
 		}
@@ -128,6 +130,31 @@ const sf::FloatRect Map::getTextureRectForTile(const Tmx::Tileset* const tileset
 
 	sf::FloatRect textureRect(tilex * tileWidth, tiley * tileWidth, tileWidth, tileWidth);
 	return textureRect;
+}
+
+bool Map::isTileCollidable(float x, float y) const {
+	// Translate the player position to a tile position on the map:
+	int tilex = std::floor(x / static_cast<float>(this->tmxMap.GetTileWidth()));
+	int tiley = std::floor(y / static_cast<float>(this->tmxMap.GetTileHeight()));
+
+	int id = this->collisionLayer->GetTileGid(tilex, tiley);
+
+	std::cout
+		<< "Player at (" << x << ", " << y << ")"
+		<< ", tile at " << tilex << ", " << tiley << " colliding: "
+		<< id
+		<< std::endl;
+
+	// If the x,y is moving out of bounds of the map, return true.
+	if (   tilex < 0
+		|| tilex > this->collisionLayer->GetWidth()
+		|| tiley < 0
+		|| tiley > this->collisionLayer->GetHeight()) {
+		return true;
+	}
+
+	// In all other cases, if the collision layer has a gid then it's a set tile.
+	return id > 0;
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {

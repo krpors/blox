@@ -1,11 +1,16 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "level.hpp"
+
 #include <SFML/Graphics.hpp>
 
 class Player : public sf::Drawable {
 private:
-	sf::IntRect prect;
+	const Map* map;
+
+	sf::FloatRect position;
+
 	sf::Texture texture;
 	sf::Sprite playerSprite;
 
@@ -13,11 +18,8 @@ private:
 	bool moveRight = false;
 	bool moveUp = false;
 	bool moveDown = false;
-
-	float x;
-	float y;
 public:
-	Player();
+	Player(const Map* const map);
 	~Player();
 
 	void handleEvent(const sf::Event& event);

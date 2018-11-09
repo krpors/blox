@@ -9,11 +9,10 @@
 #include "text.hpp"
 
 int main() {
-	Player player;
-
 	Map lolmap;
 	lolmap.load("map01.tmx");
-	// return 0;
+
+	Player player(&lolmap);
 
 	std::shared_ptr<ImageFont> font = std::make_shared<ImageFont>(
 		"font.png",

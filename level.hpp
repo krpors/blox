@@ -8,6 +8,8 @@ class Map : public sf::Drawable {
 private:
 	Tmx::Map tmxMap;
 
+	const Tmx::TileLayer* collisionLayer;
+
 	sf::Texture texture;
 	sf::VertexArray varray;
 
@@ -20,6 +22,7 @@ public:
 	~Map();
 
 	void load(const std::string& file);
+	bool isTileCollidable(float x, float y) const;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
