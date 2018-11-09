@@ -54,10 +54,11 @@ int main() {
 
 		window.clear();
 		window.draw(lolmap);
+		lolmap.drawBackgrounds(window);
 		window.draw(player);
+		lolmap.drawForegrounds(window);
 		window.draw(t1);
 		window.draw(t2);
-		lolmap.drawBackgrounds(window);
 		window.display();
 	}
 

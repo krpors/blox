@@ -4,6 +4,17 @@
 #include <tmxparser/Tmx.h>
 #include <SFML/Graphics.hpp>
 
+class Layer {
+public:
+	std::string name;
+	sf::VertexArray vertices;
+
+	Layer(const std::string& name);
+	~Layer();
+};
+
+//==============================================================================
+
 class Map : public sf::Drawable {
 private:
 	Tmx::Map tmxMap;
@@ -13,7 +24,7 @@ private:
 	sf::Texture texture;
 	// sf::VertexArray varray;
 
-	std::vector<sf::VertexArray> layersToDraw;
+	std::vector<Layer> layersToDraw;
 
 	const sf::FloatRect getTextureRectForTile(const Tmx::Tileset* const tileset, const Tmx::MapTile& tile) const;
 	void addTileQuad(int x, int y, sf::VertexArray& target, const Tmx::TileLayer* const tileLayer, const Tmx::Tileset* const tileset, const Tmx::MapTile& tile);

@@ -13,7 +13,7 @@ Player::Player(const Map* const map) {
 		throw "unable to load player texture";
 	}
 
-	this->bounds = { 37, 38, 16, 16 };
+	this->bounds = { 37, 68, 16, 16 };
 
 	this->playerSprite.setTexture(this->texture);
 	this->playerSprite.setTextureRect({ 0, 0, 16, 16 });

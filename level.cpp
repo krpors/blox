@@ -5,6 +5,16 @@
 
 #include "level.hpp"
 
+Layer::Layer(const std::string& name)
+		: name(name) {
+	vertices.setPrimitiveType(sf::Quads);
+}
+
+Layer::~Layer() {
+}
+
+//==============================================================================
+
 Map::Map() {
 	std::cout << "Creating map" << std::endl;
 }
@@ -47,13 +57,13 @@ void Map::load(const std::string& file) {
 		// first, and other layers later. That way we can create the illusion
 		// that certain layers are 'behind' the player or other entities, and
 		// other layers are 'in front of' them.
-		sf::VertexArray theArray(sf::Quads);
-
 		if (layer->GetName() == "Collision") {
 			this->collisionLayer = layer;
 			// for now, don't draw the collision layer.
 			continue;
 		}
+
+		Layer l(layer->GetName());
 
 		for (int y = 0; y < layer->GetHeight(); y++) {
 			for (int x = 0; x < layer->GetWidth(); x++) {
@@ -63,13 +73,13 @@ void Map::load(const std::string& file) {
 					const Tmx::Tileset* tileset = this->tmxMap.GetTileset(tile.tilesetId);
 
 					if (tileset != nullptr) {
-						this->addTileQuad(x, y, theArray, layer, tileset, tile);
+						this->addTileQuad(x, y, l.vertices, layer, tileset, tile);
 					}
 				}
 			}
 		}
 
-		this->layersToDraw.push_back(theArray);
+		this->layersToDraw.push_back(l);
 	}
 }
 
@@ -175,15 +185,33 @@ bool Map::isTileCollidable(int tilex, int tiley) const {
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.texture = &this->texture;
-
-	for (auto vertexArray : this->layersToDraw) {
-		target.draw(vertexArray, states);
-	}
+	// states.texture = &this->texture;
+	// for (auto layer : this->layersToDraw) {
+	// 	target.draw(layer.vertices, states);
+	// }
 }
 
 void Map::drawBackgrounds(sf::RenderTarget& target) const {
+	sf::RenderStates states;
+	states.texture = &this->texture;
+	for (auto layer : this->layersToDraw) {
+		if (layer.name == "Main") {
+			break;
+		}
+		target.draw(layer.vertices, states);
+	}
 }
 
 void Map::drawForegrounds(sf::RenderTarget& target) const {
+	sf::RenderStates states;
+	states.texture = &this->texture;
+	bool startDrawing = false;
+	for (auto layer : this->layersToDraw) {
+		if (layer.name == "Main") {
+			startDrawing = true;
+		}
+		if (startDrawing) {
+			target.draw(layer.vertices, states);
+		}
+	}
 }
