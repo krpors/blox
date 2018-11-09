@@ -13,7 +13,8 @@ Player::Player(const Map* const map) {
 		throw "unable to load player texture";
 	}
 
-	this->position.top = 33;
+	this->bounds = { 37, 38, 16, 16 };
+
 	this->playerSprite.setTexture(this->texture);
 	this->playerSprite.setTextureRect({ 0, 0, 16, 16 });
 	this->playerSprite.setScale({ 2, 2 });
@@ -43,33 +44,35 @@ void Player::handleEvent(const sf::Event& event) {
 	}
 }
 
+bool Player::isPlayerColliding(const sf::FloatRect& bounds) const {
+	return this->map->isColliding(bounds);
+}
+
 void Player::update(const sf::Time& dt) {
-	sf::FloatRect pos = this->position;
+	sf::FloatRect bounds = this->bounds;
 
 	if (this->moveLeft) {
-		pos.left -= 0.5f * (dt.asMicroseconds() / 1000.0f);
+		bounds.left -= 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 	if (this->moveRight) {
-		pos.left += 0.5f * (dt.asMicroseconds() / 1000.0f);
+		bounds.left += 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 	if (this->moveDown) {
-		pos.top += 0.5f * (dt.asMicroseconds() / 1000.0f);
+		bounds.top += 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 	if (this->moveUp) {
-		pos.top -= 0.5f * (dt.asMicroseconds() / 1000.0f);
+		bounds.top -= 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 
-	if (this->map->isTileCollidable(pos.left, pos.top)) {
-		std::cout << "BOOP!!!" << std::endl;
-	} else {
-		this->position = pos;
+	if (!this->map->isColliding(bounds)) {
+		this->bounds = bounds;
 	}
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	sf::RectangleShape rect;
-	rect.setSize({ 32, 32});
+	rect.setSize({ this->bounds.width, this->bounds.height});
 	rect.setOutlineColor(sf::Color::Red);
-	rect.setPosition( { this->position.left, this->position.top });
+	rect.setPosition( { this->bounds.left, this->bounds.top });
 	target.draw(rect, states);
 }

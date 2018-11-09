@@ -7,8 +7,6 @@
 
 Map::Map() {
 	std::cout << "Creating map" << std::endl;
-
-	varray.setPrimitiveType(sf::Quads);
 }
 
 Map::~Map() {
@@ -44,27 +42,38 @@ void Map::load(const std::string& file) {
 		const Tmx::TileLayer* layer = this->tmxMap.GetTileLayer(i);
 
 		std::cout << "Drawing layer " << layer->GetName() << std::endl;
+
+		// Every layer has its own vertex array so we can draw certain layers
+		// first, and other layers later. That way we can create the illusion
+		// that certain layers are 'behind' the player or other entities, and
+		// other layers are 'in front of' them.
+		sf::VertexArray theArray(sf::Quads);
+
 		if (layer->GetName() == "Collision") {
 			this->collisionLayer = layer;
 			// for now, don't draw the collision layer.
 			continue;
 		}
+
 		for (int y = 0; y < layer->GetHeight(); y++) {
 			for (int x = 0; x < layer->GetWidth(); x++) {
 				const int bla = layer->GetTileTilesetIndex(x, y);
 				if (bla != -1) {
 					const Tmx::MapTile& tile = layer->GetTile(x, y);
 					const Tmx::Tileset* tileset = this->tmxMap.GetTileset(tile.tilesetId);
+
 					if (tileset != nullptr) {
-						this->addTileQuad(x, y, layer, tileset, tile);
+						this->addTileQuad(x, y, theArray, layer, tileset, tile);
 					}
 				}
 			}
 		}
+
+		this->layersToDraw.push_back(theArray);
 	}
 }
 
-void Map::addTileQuad(int x, int y, const Tmx::TileLayer* const layer, const Tmx::Tileset* const tileset, const Tmx::MapTile& tile) {
+void Map::addTileQuad(int x, int y, sf::VertexArray& target, const Tmx::TileLayer* const layer, const Tmx::Tileset* const tileset, const Tmx::MapTile& tile) {
 	float tw = tileset->GetTileWidth();
 	float th = tileset->GetTileHeight();
 
@@ -108,10 +117,10 @@ void Map::addTileQuad(int x, int y, const Tmx::TileLayer* const layer, const Tmx
 		this->swap(topright.texCoords, bottomright.texCoords);
 	}
 
-	this->varray.append(topleft);
-	this->varray.append(topright);
-	this->varray.append(bottomright);
-	this->varray.append(bottomleft);
+	target.append(topleft);
+	target.append(topright);
+	target.append(bottomright);
+	target.append(bottomleft);
 }
 
 void Map::swap(sf::Vector2f& a, sf::Vector2f& b) const {
@@ -132,32 +141,49 @@ const sf::FloatRect Map::getTextureRectForTile(const Tmx::Tileset* const tileset
 	return textureRect;
 }
 
-bool Map::isTileCollidable(float x, float y) const {
-	// Translate the player position to a tile position on the map:
-	int tilex = std::floor(x / static_cast<float>(this->tmxMap.GetTileWidth()));
-	int tiley = std::floor(y / static_cast<float>(this->tmxMap.GetTileHeight()));
+bool Map::isColliding(const sf::FloatRect& objectBounds) const {
+	// what tile is occupied at the top left?
+	int tileTopX1 = std::floor(objectBounds.left / static_cast<float>(this->tmxMap.GetTileWidth() ));
+	int tileTopY1 = std::floor(objectBounds.top  / static_cast<float>(this->tmxMap.GetTileHeight() ));
 
-	int id = this->collisionLayer->GetTileGid(tilex, tiley);
+	// what tile is occupied at the bottom right?
+	int tileBottomX1 = std::floor((objectBounds.left + objectBounds.width) / static_cast<float>(this->tmxMap.GetTileWidth() ));
+	int tileBottomY1 = std::floor((objectBounds.top + objectBounds.height) / static_cast<float>(this->tmxMap.GetTileHeight() ));
 
-	std::cout
-		<< "Player at (" << x << ", " << y << ")"
-		<< ", tile at " << tilex << ", " << tiley << " colliding: "
-		<< id
-		<< std::endl;
-
-	// If the x,y is moving out of bounds of the map, return true.
-	if (   tilex < 0
-		|| tilex > this->collisionLayer->GetWidth()
-		|| tiley < 0
-		|| tiley > this->collisionLayer->GetHeight()) {
+	// If we go out of bounds of the map, return true.
+	if (   tileTopX1 < 0
+		|| tileTopY1 < 0
+		|| tileBottomX1 > this->tmxMap.GetWidth()
+		|| tileBottomY1 > this->tmxMap.GetHeight() ) {
 		return true;
 	}
 
-	// In all other cases, if the collision layer has a gid then it's a set tile.
-	return id > 0;
+	// now iterate over the occupied tiles given the objectBounds.
+	for (int x = tileTopX1; x <= tileBottomX1; x++) {
+		for (int y = tileTopY1; y <= tileBottomY1; y++) {
+			if (this->isTileCollidable(x, y)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool Map::isTileCollidable(int tilex, int tiley) const {
+	return this->collisionLayer->GetTileGid(tilex, tiley) > 0;
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = &this->texture;
-	target.draw(this->varray, states);
+
+	for (auto vertexArray : this->layersToDraw) {
+		target.draw(vertexArray, states);
+	}
+}
+
+void Map::drawBackgrounds(sf::RenderTarget& target) const {
+}
+
+void Map::drawForegrounds(sf::RenderTarget& target) const {
 }

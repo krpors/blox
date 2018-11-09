@@ -57,6 +57,7 @@ int main() {
 		window.draw(player);
 		window.draw(t1);
 		window.draw(t2);
+		lolmap.drawBackgrounds(window);
 		window.display();
 	}
 

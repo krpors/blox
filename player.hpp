@@ -9,7 +9,7 @@ class Player : public sf::Drawable {
 private:
 	const Map* map;
 
-	sf::FloatRect position;
+	sf::FloatRect bounds;
 
 	sf::Texture texture;
 	sf::Sprite playerSprite;
@@ -22,6 +22,7 @@ public:
 	Player(const Map* const map);
 	~Player();
 
+	bool isPlayerColliding(const sf::FloatRect& bounds) const;
 	void handleEvent(const sf::Event& event);
 	void update(const sf::Time& dt);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
