@@ -20,9 +20,12 @@ int main() {
 
 
 	Text t1(font);
-	t1.setText(0, 0, "The quick brown fox jumps over the lazy doggo.");
+	// t1.setText(0, 0, "The quick brown fox jumps over the lazy doggo.");
+	t1.setText(12, 0, "abcdefghijklmnopqrstuvwxyz");
 	Text t2(font);
 	t2.setText(0, 10, "Yo dude!");
+
+	sf::View derp({ 320/2, 240/2}, { 320, 240 });
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
 
@@ -53,6 +56,7 @@ int main() {
 		player.update(elapsed);
 
 		window.clear();
+		window.setView(derp);
 		window.draw(lolmap);
 		lolmap.drawBackgrounds(window);
 		window.draw(player);

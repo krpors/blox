@@ -18,6 +18,8 @@ ImageFont::ImageFont(const std::string& file, const std::string& glyphs) {
 		throw "Unable to load texture from image object";
 	}
 
+	texture.setSmooth(false);
+
 	std::clog << "ImageFont created with image file " << file << std::endl;
 
 	// Get the separator color of the image, which is the topleft pixel of the image.
@@ -105,7 +107,13 @@ void Text::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 		sf::Text t;
 		auto search = map.find(c);
 		if (search != map.end()) {
-			sprite.setTextureRect(search->second);
+			sf::IntRect texrect = search->second;
+			// TODO: when the View is zoomed in, we get yellow borders.
+			// The texture rect is probably bugged.
+			// texrect.left += 1;
+			// texrect.width -= 1;
+
+			sprite.setTextureRect(texrect);
 			sprite.setPosition(position);
 			position.x += search->second.width;
 
