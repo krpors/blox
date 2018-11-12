@@ -4,9 +4,7 @@
 
 #include "player.hpp"
 
-Player::Player(const Map* const map) {
-	assert(map != nullptr);
-
+Player::Player(const std::shared_ptr<Map>& map) {
 	this->map = map;
 
 	if (!texture.loadFromFile("player.png")) {

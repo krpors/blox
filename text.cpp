@@ -110,8 +110,6 @@ void Text::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 			sf::IntRect texrect = search->second;
 			// TODO: when the View is zoomed in, we get yellow borders.
 			// The texture rect is probably bugged.
-			// texrect.left += 1;
-			// texrect.width -= 1;
 
 			sprite.setTextureRect(texrect);
 			sprite.setPosition(position);

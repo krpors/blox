@@ -3,11 +3,13 @@
 
 #include "level.hpp"
 
+#include <memory>
+
 #include <SFML/Graphics.hpp>
 
 class Player : public sf::Drawable {
 private:
-	const Map* map;
+	std::shared_ptr<Map> map;
 
 	sf::FloatRect bounds;
 
@@ -19,7 +21,7 @@ private:
 	bool moveUp = false;
 	bool moveDown = false;
 public:
-	Player(const Map* const map);
+	Player(const std::shared_ptr<Map>& map);
 	~Player();
 
 	bool isPlayerColliding(const sf::FloatRect& bounds) const;

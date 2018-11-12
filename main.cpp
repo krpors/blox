@@ -9,10 +9,10 @@
 #include "text.hpp"
 
 int main() {
-	Map lolmap;
-	lolmap.load("map01.tmx");
+	std::shared_ptr<Map> lolmap = std::make_shared<Map>();
+	lolmap->load("map01.tmx");
 
-	Player player(&lolmap);
+	Player player(lolmap);
 
 	std::shared_ptr<ImageFont> font = std::make_shared<ImageFont>(
 		"font.png",
@@ -44,8 +44,8 @@ int main() {
 			if (event.type == sf::Event::KeyPressed) {
 				switch (event.key.code) {
 				case sf::Keyboard::Escape: window.close(); break;
-				case sf::Keyboard::Add: derp.setSize(derp.getSize().x + 10, derp.getSize().y + 10); break;
-				case sf::Keyboard::Subtract: derp.setSize(derp.getSize().x - 10, derp.getSize().y - 10); break;
+				case sf::Keyboard::Add: derp.setSize(derp.getSize().x + 10 * 1.33f, derp.getSize().y + 10); break;
+				case sf::Keyboard::Subtract: derp.setSize(derp.getSize().x - 10 * 1.33f, derp.getSize().y - 10); break;
 				default: break;
 				}
 			}
@@ -62,10 +62,9 @@ int main() {
 
 		window.clear();
 		window.setView(derp);
-		window.draw(lolmap);
-		lolmap.drawBackgrounds(window);
+		lolmap->drawBackgrounds(window);
 		window.draw(player);
-		lolmap.drawForegrounds(window);
+		lolmap->drawForegrounds(window);
 		window.setView(window.getDefaultView());
 		window.draw(t1);
 		window.draw(t2);
