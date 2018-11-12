@@ -25,7 +25,9 @@ int main() {
 	Text t2(font);
 	t2.setText(0, 10, "Yo dude!");
 
-	sf::View derp({ 320/2, 240/2}, { 320, 240 });
+	float w = 320;
+	float h = 240;
+	sf::View derp({ w/2, h/2}, { w, h });
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
 
@@ -42,6 +44,8 @@ int main() {
 			if (event.type == sf::Event::KeyPressed) {
 				switch (event.key.code) {
 				case sf::Keyboard::Escape: window.close(); break;
+				case sf::Keyboard::Add: derp.setSize(derp.getSize().x + 10, derp.getSize().y + 10); break;
+				case sf::Keyboard::Subtract: derp.setSize(derp.getSize().x - 10, derp.getSize().y - 10); break;
 				default: break;
 				}
 			}
@@ -54,6 +58,7 @@ int main() {
 		t2.setText(0, 10, ss.str());
 
 		player.update(elapsed);
+		derp.setCenter({ player.getBounds().left, player.getBounds().top });
 
 		window.clear();
 		window.setView(derp);
@@ -61,6 +66,7 @@ int main() {
 		lolmap.drawBackgrounds(window);
 		window.draw(player);
 		lolmap.drawForegrounds(window);
+		window.setView(window.getDefaultView());
 		window.draw(t1);
 		window.draw(t2);
 		window.display();

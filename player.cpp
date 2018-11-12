@@ -69,6 +69,10 @@ void Player::update(const sf::Time& dt) {
 	}
 }
 
+const sf::FloatRect& Player::getBounds() const {
+	return this->bounds;
+}
+
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	sf::RectangleShape rect;
 	rect.setSize({ this->bounds.width, this->bounds.height});

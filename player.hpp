@@ -25,6 +25,7 @@ public:
 	bool isPlayerColliding(const sf::FloatRect& bounds) const;
 	void handleEvent(const sf::Event& event);
 	void update(const sf::Time& dt);
+	const sf::FloatRect& getBounds() const;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 

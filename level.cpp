@@ -47,6 +47,7 @@ void Map::load(const std::string& file) {
 	if (!this->texture.loadFromFile(src)) {
 		throw "failed to load texture from tilemap";
 	}
+	texture.setSmooth(false);
 
 	for (int i = 0; i < this->tmxMap.GetNumTileLayers(); i++) {
 		const Tmx::TileLayer* layer = this->tmxMap.GetTileLayer(i);
