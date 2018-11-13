@@ -44,9 +44,15 @@ int main() {
 			if (event.type == sf::Event::KeyPressed) {
 				switch (event.key.code) {
 				case sf::Keyboard::Escape: window.close(); break;
-				case sf::Keyboard::Add: derp.setSize(derp.getSize().x + 10 * 1.33f, derp.getSize().y + 10); break;
-				case sf::Keyboard::Subtract: derp.setSize(derp.getSize().x - 10 * 1.33f, derp.getSize().y - 10); break;
 				default: break;
+				}
+			}
+			if (event.type == sf::Event::MouseWheelScrolled) {
+				int multiplier = 60;
+				if (event.mouseWheelScroll.delta > 0) {
+					derp.setSize(derp.getSize().x - multiplier * 1.33f, derp.getSize().y - multiplier);
+				} else if (event.mouseWheelScroll.delta < 0) {
+					derp.setSize(derp.getSize().x + multiplier * 1.33f, derp.getSize().y + multiplier);
 				}
 			}
 

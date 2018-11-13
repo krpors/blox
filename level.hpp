@@ -34,12 +34,17 @@ private:
 	 */
 	void swap(sf::Vector2f& a, sf::Vector2f& b) const;
 
+	/**
+	 * Checks whether the given tile at (tilex, tiley) is collidable. These
+	 * are tile coordinates, and not pixel coordinates!
+	 */
+	bool isTileCollidable(int tilex, int tiley) const;
+
 public:
 	Map();
 	~Map();
 
 	void load(const std::string& file);
-	bool isTileCollidable(int tilex, int tiley) const;
 	/**
 	 * Checks whether the given rectangle (which should denote a collision
 	 * bounding box) will collide with a tile in the collision layer.
