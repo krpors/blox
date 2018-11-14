@@ -1,6 +1,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "anim.hpp"
 #include "level.hpp"
 
 #include <memory>
@@ -14,7 +15,7 @@ private:
 	sf::FloatRect bounds;
 
 	sf::Texture texture;
-	sf::Sprite playerSprite;
+	AnimatedSprite playerSprite;
 
 	bool moveLeft = false;
 	bool moveRight = false;

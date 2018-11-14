@@ -36,38 +36,29 @@ const sf::Time& Animation::getFrameTime() const {
 
 //==============================================================================
 
-AnimatedSprite::AnimatedSprite(const std::shared_ptr<sf::Texture>& texture) {
-	this->texture = texture;
-
-	this->sprite.setPosition({ 0, 0 });
-	this->sprite.setTextureRect({ 0, 0, 16, 16});
-	this->sprite.setTexture(*this->texture);
-
-	this->animation = new Animation(sf::milliseconds(100));
-	this->animation->addFrame( { 0,  0,  16, 16 } );
-	this->animation->addFrame( { 16, 0,  16, 16 } );
-	this->animation->addFrame( { 32, 0,  16, 16 } );
-	this->animation->addFrame( { 48, 0,  16, 16 } );
-
+AnimatedSprite::AnimatedSprite() {
 	this->setScale({ 2.0f, 2.0f });
 }
 
 AnimatedSprite::~AnimatedSprite() {
-	delete this->animation;
+}
+
+void AnimatedSprite::setAnimation(Animation& animation) {
+	this->animation = &animation;
+	// TODO: select first frame cus this advances to the next immediately
+	this->setTextureRect(this->animation->nextFrame());
 }
 
 void AnimatedSprite::update(const sf::Time& delta) {
+	if (this->animation == nullptr) {
+		return;
+	}
+
 	this->frametime += delta;
 
 	if (this->frametime > this->animation->getFrameTime()) {
 		const sf::IntRect& rect = this->animation->nextFrame();
-		this->sprite.setTextureRect(rect);
+		this->setTextureRect(rect);
 		this->frametime = sf::Time::Zero;
 	}
-}
-
-void AnimatedSprite::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.transform *= getTransform();
-	states.texture = this->texture.get();
-	target.draw(this->sprite, states);
 }

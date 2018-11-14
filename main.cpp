@@ -26,12 +26,20 @@ int main() {
 	Text t2(font);
 	t2.setText(0, 10, "Yo dude!");
 
-	auto playerTexture = std::make_shared<sf::Texture>();
-	if (!playerTexture->loadFromFile("player.png")) {
+	sf::Texture playerTexture;
+	if (!playerTexture.loadFromFile("player.png")) {
 		throw "unable to LOAD!";
 	}
 
-	AnimatedSprite sprite(playerTexture);
+	Animation anim(sf::milliseconds(100));
+	anim.addFrame({ 0,  0, 16, 16});
+	anim.addFrame({ 16, 0, 16, 16});
+	anim.addFrame({ 32, 0, 16, 16});
+	anim.addFrame({ 48, 0, 16, 16});
+
+	AnimatedSprite sprite;
+	sprite.setAnimation(anim);
+	sprite.setTexture(playerTexture);
 
 	float w = 320;
 	float h = 240;

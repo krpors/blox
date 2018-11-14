@@ -21,22 +21,20 @@ public:
 	void addFrame(const sf::IntRect& rect);
 };
 
+//==============================================================================
+
 class AnimatedSprite : public sf::Sprite {
 private:
 	sf::Time frametime;
-	std::shared_ptr<sf::Texture> texture;
-	sf::Sprite sprite;
 
-	size_t currFrame = 0;
-	std::vector<sf::IntRect> frames;
-
-	Animation* animation;
+	Animation* animation = nullptr;
 public:
-	AnimatedSprite(const std::shared_ptr<sf::Texture>& texture);
+	AnimatedSprite();
 	~AnimatedSprite();
 
+	void setAnimation(Animation& animation);
 	void update(const sf::Time& delta);
-	void draw(sf::RenderTarget&, sf::RenderStates) const override;
+	// void draw(sf::RenderTarget&, sf::RenderStates) const override;
 };
 
 #endif // ANIMATION_HPP
