@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "anim.hpp"
 #include "level.hpp"
 #include "player.hpp"
 #include "text.hpp"
@@ -24,6 +25,13 @@ int main() {
 	t1.setText(12, 0, "abcdefghijklmnopqrstuvwxyz");
 	Text t2(font);
 	t2.setText(0, 10, "Yo dude!");
+
+	auto playerTexture = std::make_shared<sf::Texture>();
+	if (!playerTexture->loadFromFile("player.png")) {
+		throw "unable to LOAD!";
+	}
+
+	AnimatedSprite sprite(playerTexture);
 
 	float w = 320;
 	float h = 240;
@@ -64,6 +72,8 @@ int main() {
 		t2.setText(0, 10, ss.str());
 
 		player.update(elapsed);
+		sprite.update(elapsed);
+
 		derp.setCenter({ player.getBounds().left, player.getBounds().top });
 
 		window.clear();
@@ -74,6 +84,7 @@ int main() {
 		window.setView(window.getDefaultView());
 		window.draw(t1);
 		window.draw(t2);
+		window.draw(sprite);
 		window.display();
 	}
 
