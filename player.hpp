@@ -15,6 +15,8 @@ private:
 	sf::FloatRect bounds;
 
 	sf::Texture texture;
+
+	Animation animationRest;
 	AnimatedSprite playerSprite;
 
 	bool moveLeft = false;

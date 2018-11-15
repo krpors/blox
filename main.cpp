@@ -31,16 +31,6 @@ int main() {
 		throw "unable to LOAD!";
 	}
 
-	Animation anim(sf::milliseconds(100));
-	anim.addFrame({ 0,  0, 16, 16});
-	anim.addFrame({ 16, 0, 16, 16});
-	anim.addFrame({ 32, 0, 16, 16});
-	anim.addFrame({ 48, 0, 16, 16});
-
-	AnimatedSprite sprite;
-	sprite.setAnimation(anim);
-	sprite.setTexture(playerTexture);
-
 	float w = 320;
 	float h = 240;
 	sf::View derp({ w/2, h/2}, { w, h });
@@ -80,7 +70,6 @@ int main() {
 		t2.setText(0, 10, ss.str());
 
 		player.update(elapsed);
-		sprite.update(elapsed);
 
 		derp.setCenter({ player.getBounds().left, player.getBounds().top });
 
@@ -92,7 +81,6 @@ int main() {
 		window.setView(window.getDefaultView());
 		window.draw(t1);
 		window.draw(t2);
-		window.draw(sprite);
 		window.display();
 	}
 

@@ -13,8 +13,14 @@ Player::Player(const std::shared_ptr<Map>& map) {
 
 	this->bounds = { 37, 68, 16, 16 };
 
+	this->animationRest.setFrameTime(sf::milliseconds(100));
+	this->animationRest.addFrame({ 0,  0, 16, 16});
+	this->animationRest.addFrame({ 16, 0, 16, 16});
+	this->animationRest.addFrame({ 32, 0, 16, 16});
+	this->animationRest.addFrame({ 48, 0, 16, 16});
+
+	this->playerSprite.setAnimation(animationRest);
 	this->playerSprite.setTexture(this->texture);
-	this->playerSprite.setTextureRect({ 0, 0, 16, 16 });
 	this->playerSprite.setScale({ 2, 2 });
 }
 
@@ -62,8 +68,11 @@ void Player::update(const sf::Time& dt) {
 		bounds.top -= 0.5f * (dt.asMicroseconds() / 1000.0f);
 	}
 
+	this->playerSprite.update(dt);
+
 	if (!this->map->isColliding(bounds)) {
 		this->bounds = bounds;
+		this->playerSprite.setPosition({ bounds.left - 8, bounds.top - 15 });
 	}
 }
 
@@ -76,5 +85,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	rect.setSize({ this->bounds.width, this->bounds.height});
 	rect.setOutlineColor(sf::Color::Red);
 	rect.setPosition( { this->bounds.left, this->bounds.top });
-	target.draw(rect, states);
+	target.draw(this->playerSprite, states);
+	// target.draw(rect, states);
 }

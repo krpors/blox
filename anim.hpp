@@ -13,9 +13,10 @@ private:
 	size_t currentFrame;
 	std::vector<sf::IntRect> frames; ///< Texture rectangles.
 public:
-	Animation(const sf::Time& frameTime);
+	Animation();
 	~Animation();
 
+	void setFrameTime(const sf::Time& frametime);
 	const sf::Time& getFrameTime() const;
 	const sf::IntRect& nextFrame();
 	void addFrame(const sf::IntRect& rect);
