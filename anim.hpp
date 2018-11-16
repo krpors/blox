@@ -19,6 +19,8 @@ public:
 	void setFrameTime(const sf::Time& frametime);
 	const sf::Time& getFrameTime() const;
 	const sf::IntRect& nextFrame();
+	void reset();
+	const std::vector<sf::IntRect>& getFrames() const;
 	void addFrame(const sf::IntRect& rect);
 };
 
@@ -28,14 +30,17 @@ class AnimatedSprite : public sf::Sprite {
 private:
 	sf::Time frametime;
 
+	bool playing = false;
+
 	Animation* animation = nullptr;
 public:
 	AnimatedSprite();
 	~AnimatedSprite();
 
+	void flipTexture();
 	void setAnimation(Animation& animation);
+	void setPlaying(bool playing);
 	void update(const sf::Time& delta);
-	// void draw(sf::RenderTarget&, sf::RenderStates) const override;
 };
 
 #endif // ANIMATION_HPP

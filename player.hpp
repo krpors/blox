@@ -17,6 +17,8 @@ private:
 	sf::Texture texture;
 
 	Animation animationRest;
+	Animation animationWalk;
+
 	AnimatedSprite playerSprite;
 
 	bool moveLeft = false;
@@ -27,6 +29,7 @@ public:
 	Player(const std::shared_ptr<Map>& map);
 	~Player();
 
+	void stop();
 	bool isPlayerColliding(const sf::FloatRect& bounds) const;
 	void handleEvent(const sf::Event& event);
 	void update(const sf::Time& dt);

@@ -40,7 +40,6 @@ int main() {
 	sf::Clock clock;
 	while (window.isOpen()) {
 		sf::Time elapsed = clock.restart();
-		(void)elapsed;
 
 		sf::Event event;
 		while (window.pollEvent(event)) {
