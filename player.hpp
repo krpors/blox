@@ -21,6 +21,8 @@ private:
 
 	AnimatedSprite playerSprite;
 
+	bool grounded = false;
+
 	bool moveLeft = false;
 	bool moveRight = false;
 	bool moveUp = false;

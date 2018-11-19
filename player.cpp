@@ -11,7 +11,7 @@ Player::Player(const std::shared_ptr<Map>& map) {
 		throw "unable to load player texture";
 	}
 
-	this->bounds = { 37, 68, 16, 24 };
+	this->bounds = { 37, 33, 16, 24 };
 
 	this->animationRest.setFrameTime(sf::milliseconds(100));
 	this->animationRest.addFrame({ 0,  0, 16, 16});
@@ -79,24 +79,39 @@ void Player::update(const sf::Time& dt) {
 		if (this->map->isColliding(newBounds)) {
 			newBounds = this->bounds;
 		}
+
+		// check a tile below. If nothing, unground ourselves so we can
+		// fall freely.
+		sf::FloatRect temp = newBounds;
+		temp.top += 1;
+		if (!this->map->isColliding(temp)) {
+			this->grounded = false;
+		}
 	} else {
 		this->playerSprite.setAnimation(this->animationRest);
 	}
 
-	newBounds.top += 0.09f * (dt.asMicroseconds() / 1000.0f);
+	if (this->moveUp && this->grounded) {
+		newBounds.top -= 32;
+		this->grounded = false;
+		this->moveUp = false;
+	}
 
-	if (this->map->isColliding(newBounds)) {
-		newBounds = this->bounds;
-		newBounds.top -= 1;
-		std::cout << "Colliding y axis " << (newBounds.top + newBounds.height) << std::endl;
+	// 1. if not grounded. fall.
+	// 2. if collision, set grounded to true.
+	// 3. set player y position to top of tile
+	if (!this->grounded) {
+		newBounds.top += 0.09f * (dt.asMicroseconds() / 1000.0f);
+		if (this->isPlayerColliding(newBounds)) {
+			int newy = (newBounds.top / 32) * 32 - 1;
+			newBounds.top = newy;
+			this->grounded = true;
+		}
 	}
 
 	this->playerSprite.update(dt);
-
-	// if (!this->map->isColliding(newBounds)) {
-		this->bounds = newBounds;
-		this->playerSprite.setPosition({ bounds.left + 8, bounds.top + 10 });
-	// }
+	this->bounds = newBounds;
+	this->playerSprite.setPosition({ bounds.left + 8, bounds.top + 10 });
 }
 
 const sf::FloatRect& Player::getBounds() const {
