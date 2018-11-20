@@ -3,6 +3,7 @@
 
 #include "anim.hpp"
 #include "level.hpp"
+#include "text.hpp"
 
 #include <memory>
 
@@ -21,12 +22,14 @@ private:
 
 	AnimatedSprite playerSprite;
 
-	bool grounded = false;
+	float dy = 0.0f; //< delta y, used for jumping/falling(gravity)
 
-	bool moveLeft = false;
+	bool grounded = false; // are we standing on some solid surface?
+
+	bool moveLeft  = false;
 	bool moveRight = false;
-	bool moveUp = false;
-	bool moveDown = false;
+	bool moveUp    = false;
+	bool moveDown  = false;
 public:
 	Player(const std::shared_ptr<Map>& map);
 	~Player();

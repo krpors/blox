@@ -19,17 +19,8 @@ int main() {
 		"font.png",
 		" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
 
-
-	Text t1(font);
-	// t1.setText(0, 0, "The quick brown fox jumps over the lazy doggo.");
-	t1.setText(12, 0, "abcdefghijklmnopqrstuvwxyz");
 	Text t2(font);
-	t2.setText(0, 10, "Yo dude!");
-
-	sf::Texture playerTexture;
-	if (!playerTexture.loadFromFile("player.png")) {
-		throw "unable to LOAD!";
-	}
+	Text t3(font);
 
 	float w = 320;
 	float h = 240;
@@ -66,7 +57,14 @@ int main() {
 
 		std::stringstream ss;
 		ss << "The elapsed time is " << std::setfill(' ') << std::setw(5) << elapsed.asMicroseconds() << " microseconds.";
-		t2.setText(0, 10, ss.str());
+		t2.setText(0, 0, ss.str());
+
+		ss.str("");
+		ss
+			<< "Player at ("
+			<< static_cast<int>(player.getBounds().left) << ", "
+			<< static_cast<int>(player.getBounds().top) << ")";
+		t3.setText(0, 12, ss.str());
 
 		player.update(elapsed);
 
@@ -78,8 +76,8 @@ int main() {
 		window.draw(player);
 		lolmap->drawForegrounds(window);
 		window.setView(window.getDefaultView());
-		window.draw(t1);
 		window.draw(t2);
+		window.draw(t3);
 		window.display();
 	}
 

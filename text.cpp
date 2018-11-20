@@ -6,7 +6,18 @@
 #include "text.hpp"
 #include "util.hpp"
 
+ImageFont::ImageFont() {
+}
+
 ImageFont::ImageFont(const std::string& file, const std::string& glyphs) {
+	this->load(file, glyphs);
+}
+
+ImageFont::~ImageFont() {
+	std::clog << "Imagefont is destroyed" << std::endl;
+}
+
+void ImageFont::load(const std::string& file, const std::string& glyphs) {
 	this->filename = file;
 	this->glyphs = glyphs;
 
@@ -69,10 +80,6 @@ ImageFont::ImageFont(const std::string& file, const std::string& glyphs) {
 	std::clog << "Initialized ImageFont with " << glyphCount << " glyphs" << std::endl;
 }
 
-ImageFont::~ImageFont() {
-	std::clog << "Imagefont is destroyed" << std::endl;
-}
-
 const std::map<char, sf::IntRect> ImageFont::getGlyphMap() const {
 	return this->glyphMap;
 }
@@ -85,12 +92,19 @@ const sf::Texture& ImageFont::getTexture() const {
 // Text class.
 // =============================================================================
 
+Text::Text() {
+}
+
 Text::Text(const std::shared_ptr<ImageFont>& font) {
-	this->font = font;
+	this->setFont(font);
 }
 
 Text::~Text() {
 	std::clog << "Text is destroyed" << std::endl;
+}
+
+void Text::setFont(const std::shared_ptr<ImageFont>& font) {
+	this->font = font;
 }
 
 void Text::setText(float x, float y, const std::string& str) {
@@ -99,7 +113,8 @@ void Text::setText(float x, float y, const std::string& str) {
 }
 
 void Text::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	states.transform = this->getTransform();
+	// TODO: this transform will do it relative to a parent. figure it out properly.
+	// states.transform = this->getTransform();
 	sf::Sprite sprite(font->getTexture());
 	sf::Vector2f position = getPosition();
 	const std::map<char, sf::IntRect>& map = this->font->getGlyphMap();

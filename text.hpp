@@ -8,17 +8,19 @@
 
 class ImageFont {
 private:
-	std::string filename;
-	std::string glyphs;
+	std::string filename = "";
+	std::string glyphs = "";
 
 	std::map<char, sf::IntRect> glyphMap;
 
 	sf::Image   image;
 	sf::Texture texture;
 public:
+	ImageFont();
 	ImageFont(const std::string& filename, const std::string& glyphs);
 	~ImageFont();
 
+	void load(const std::string& file, const std::string& glyphs);
 	const std::map<char, sf::IntRect> getGlyphMap() const;
 	const sf::Texture& getTexture() const;
 };
@@ -34,9 +36,11 @@ private:
 	std::string text = "";
 
 public:
+	Text();
 	Text(const std::shared_ptr<ImageFont>& font);
 	~Text();
 
+	void setFont(const std::shared_ptr<ImageFont>& font);
 	void setText(float x, float y, const std::string& str);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

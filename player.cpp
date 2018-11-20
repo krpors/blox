@@ -1,8 +1,10 @@
 #include <cassert>
 #include <memory>
 #include <iostream>
+#include <sstream>
 
 #include "player.hpp"
+#include "text.hpp"
 
 Player::Player(const std::shared_ptr<Map>& map) {
 	this->map = map;
@@ -66,11 +68,13 @@ bool Player::isPlayerColliding(const sf::FloatRect& bounds) const {
 void Player::update(const sf::Time& dt) {
 	sf::FloatRect newBounds = this->bounds;
 
+	float timeStep = dt.asMicroseconds() / 100000.0f;
+
 	if (this->moveLeft) {
-		newBounds.left -= 0.2f * (dt.asMicroseconds() / 1000.0f);
+		newBounds.left -= 15.0f * timeStep;
 	}
 	if (this->moveRight) {
-		newBounds.left += 0.2f * (dt.asMicroseconds() / 1000.0f);
+		newBounds.left += 15.0f * timeStep;
 	}
 
 	if (this->moveLeft || this->moveRight) {
@@ -92,7 +96,7 @@ void Player::update(const sf::Time& dt) {
 	}
 
 	if (this->moveUp && this->grounded) {
-		newBounds.top -= 32;
+		this->dy = -0.2f;
 		this->grounded = false;
 		this->moveUp = false;
 	}
@@ -101,11 +105,25 @@ void Player::update(const sf::Time& dt) {
 	// 2. if collision, set grounded to true.
 	// 3. set player y position to top of tile
 	if (!this->grounded) {
-		newBounds.top += 0.09f * (dt.asMicroseconds() / 1000.0f);
+		this->dy += 0.02f * timeStep;
+		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
 		if (this->isPlayerColliding(newBounds)) {
-			int newy = (newBounds.top / 32) * 32 - 1;
-			newBounds.top = newy;
-			this->grounded = true;
+			if (this->dy < 0.0f) {
+				std::cout << "I was jumping" << std::endl;
+				int newy = static_cast<int>(newBounds.top / 32.0) * 32 + 1 + 32;
+				newBounds.top = newy;
+				std::cout << "NEWBOUNDS " << newBounds.top << std::endl;
+				this->dy = 0.0f;
+			} else {
+				int newy = static_cast<int>(newBounds.top / 32.0) * 32 - 1 + 32;
+				std::cout
+					<< "Newbounds top: " << newBounds.top
+					<< ", newy = " << newy
+					<< std::endl;
+				newBounds.top = newy - newBounds.height;
+				this->grounded = true;
+				this->dy = 0.0f;
+			}
 		}
 	}
 
