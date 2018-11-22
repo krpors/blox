@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -52,9 +53,13 @@ AnimatedSprite::AnimatedSprite() {
 AnimatedSprite::~AnimatedSprite() {
 }
 
-void AnimatedSprite::flipTexture() {
+void AnimatedSprite:: setFlipped(bool flip) {
 	const sf::Vector2f& scaling = this->getScale();
-	this->setScale(-scaling.x, scaling.y);
+	if (flip) {
+		this->setScale(-std::abs(scaling.x), scaling.y);
+	} else {
+		this->setScale(std::abs(scaling.x), scaling.y);
+	}
 }
 
 void AnimatedSprite::setAnimation(Animation& animation) {

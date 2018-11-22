@@ -43,11 +43,11 @@ void Player::handleEvent(const sf::Event& event) {
 	// refactor using sf::Keyboard::is....?
 	if (event.type == sf::Event::KeyPressed) {
 		switch (event.key.code) {
-		case sf::Keyboard::Left:  this->moveLeft  = true; break;
-		case sf::Keyboard::Right: this->moveRight = true; break;
+		case sf::Keyboard::Left:  this->moveLeft  = true; this->playerSprite.setFlipped(true);  break;
+		case sf::Keyboard::Right: this->moveRight = true; this->playerSprite.setFlipped(false); break;
 		case sf::Keyboard::Down:  this->moveDown  = true; break;
 		case sf::Keyboard::Up:    this->moveUp    = true; break;
-		case sf::Keyboard::F:     this->playerSprite.flipTexture();
+
 		default: break;
 		}
 	} else if (event.type == sf::Event::KeyReleased) {
@@ -71,10 +71,10 @@ void Player::update(const sf::Time& dt) {
 	float timeStep = dt.asMicroseconds() / 100000.0f;
 
 	if (this->moveLeft) {
-		newBounds.left -= 15.0f * timeStep;
+		newBounds.left -= 18.0f * timeStep;
 	}
 	if (this->moveRight) {
-		newBounds.left += 15.0f * timeStep;
+		newBounds.left += 18.0f * timeStep;
 	}
 
 	if (this->moveLeft || this->moveRight) {
@@ -84,8 +84,7 @@ void Player::update(const sf::Time& dt) {
 			newBounds = this->bounds;
 		}
 
-		// check a tile below. If nothing, unground ourselves so we can
-		// fall freely.
+		// check a tile below. If nothing, unground ourselves so we can fall freely.
 		sf::FloatRect temp = newBounds;
 		temp.top += 1;
 		if (!this->map->isColliding(temp)) {
@@ -96,7 +95,7 @@ void Player::update(const sf::Time& dt) {
 	}
 
 	if (this->moveUp && this->grounded) {
-		this->dy = -0.2f;
+		this->dy = -0.7f;
 		this->grounded = false;
 		this->moveUp = false;
 	}
@@ -105,11 +104,11 @@ void Player::update(const sf::Time& dt) {
 	// 2. if collision, set grounded to true.
 	// 3. set player y position to top of tile
 	if (!this->grounded) {
-		this->dy += 0.02f * timeStep;
+		this->dy += 0.2f * timeStep;
 		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
 		if (this->isPlayerColliding(newBounds)) {
 			if (this->dy < 0.0f) {
-				std::cout << "I was jumping" << std::endl;
+				std::cout << "I was jumping newbounds: " << newBounds.top << std::endl;
 				int newy = static_cast<int>(newBounds.top / 32.0) * 32 + 1 + 32;
 				newBounds.top = newy;
 				std::cout << "NEWBOUNDS " << newBounds.top << std::endl;

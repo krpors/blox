@@ -37,7 +37,7 @@ public:
 	AnimatedSprite();
 	~AnimatedSprite();
 
-	void flipTexture();
+	void setFlipped(bool flip);
 	void setAnimation(Animation& animation);
 	void setPlaying(bool playing);
 	void update(const sf::Time& delta);
