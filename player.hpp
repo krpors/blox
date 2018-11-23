@@ -19,6 +19,8 @@ private:
 
 	Animation animationRest;
 	Animation animationWalk;
+	Animation animationJump;
+	Animation animationFalling;
 
 	AnimatedSprite playerSprite;
 
@@ -38,6 +40,7 @@ public:
 
 	void stop();
 	bool isPlayerColliding(const sf::FloatRect& bounds) const;
+	bool isStatic() const;
 	void handleEvent(const sf::Event& event);
 	void update(const sf::Time& dt);
 	const sf::FloatRect& getBounds() const;

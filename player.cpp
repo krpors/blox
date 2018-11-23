@@ -30,6 +30,12 @@ Player::Player(const std::shared_ptr<Map>& map) {
 	this->animationWalk.addFrame({ 64, 16, 16, 16 });
 	this->animationWalk.addFrame({ 80, 16, 16, 16 });
 
+	this->animationJump.setFrameTime(sf::Time::Zero);
+	this->animationJump.addFrame({0, 32, 16, 16});
+
+	this->animationFalling.setFrameTime(sf::Time::Zero);
+	this->animationFalling.addFrame({16, 32, 16, 16});
+
 	this->playerSprite.setAnimation(animationWalk);
 	this->playerSprite.setTexture(this->texture);
 	this->playerSprite.setOrigin({ 8, 8 });
@@ -66,16 +72,20 @@ bool Player::isPlayerColliding(const sf::FloatRect& bounds) const {
 	return this->map->isColliding(bounds);
 }
 
+bool Player::isStatic() const {
+	return !this->moveLeft && !this->moveRight && this->grounded;
+}
+
 void Player::update(const sf::Time& dt) {
 	sf::FloatRect newBounds = this->bounds;
 
 	float timeStep = dt.asMicroseconds() / 100000.0f;
 
 	if (this->moveLeft) {
-		newBounds.left -= 18.0f * timeStep;
+		newBounds.left -= 24.0f * timeStep;
 	}
 	if (this->moveRight) {
-		newBounds.left += 18.0f * timeStep;
+		newBounds.left += 24.0f * timeStep;
 	}
 
 	if (this->moveLeft || this->moveRight) {
@@ -91,7 +101,9 @@ void Player::update(const sf::Time& dt) {
 		if (!this->map->isColliding(temp)) {
 			this->grounded = false;
 		}
-	} else {
+	}
+
+	if (this->isStatic()) {
 		this->playerSprite.setAnimation(this->animationRest);
 	}
 
@@ -103,10 +115,16 @@ void Player::update(const sf::Time& dt) {
 
 	// Are we in the jumping state (jumping), but did we release the jump button?
 	// In that case, stop the jumping to control the player height finer grained.
-	if (this->jumping && !this->jump) {
+	if (this->jumping && !this->jump && this->dy < 0.0f) {
 		// Stop the jumping state and reset the y acceleration.
 		this->jumping = false;
 		this->dy = 0.0f;
+	}
+
+	if (this->dy >= 0.0f && !this->grounded) {
+		this->playerSprite.setAnimation(animationFalling);
+	} else if (this->dy <= 0.0f && this->jumping) {
+		this->playerSprite.setAnimation(animationJump);
 	}
 
 	// 1. if not grounded. fall.
@@ -117,12 +135,17 @@ void Player::update(const sf::Time& dt) {
 		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
 		if (this->isPlayerColliding(newBounds)) {
 			if (this->dy < 0.0f) {
+				// When we collide while moving up it means we hit a ceiling tile.
+				// Align the player's top to the bottom of the tile.
 				std::cout << "I was jumping newbounds: " << newBounds.top << std::endl;
 				int newy = static_cast<int>(newBounds.top / 32.0) * 32 + 1 + 32;
 				newBounds.top = newy;
 				std::cout << "NEWBOUNDS " << newBounds.top << std::endl;
 				this->dy = 0.0f;
 			} else {
+				// When we collidge while moving dow it means we hit the 'ground'.
+				// In that case, align the bottom of the player to the top of the
+				// tile, and ground ourselves.
 				int newy = static_cast<int>(newBounds.top / 32.0) * 32 - 1 + 32;
 				std::cout
 					<< "Newbounds top: " << newBounds.top
