@@ -14,6 +14,7 @@ Player::Player(const std::shared_ptr<Map>& map) {
 	}
 
 	this->bounds = { 37, 33, 16, 24 };
+	this->grounded = true;
 
 	this->animationRest.setFrameTime(sf::milliseconds(100));
 	this->animationRest.addFrame({ 0,  0, 16, 16});
@@ -46,7 +47,7 @@ void Player::handleEvent(const sf::Event& event) {
 		case sf::Keyboard::Left:  this->moveLeft  = true; this->playerSprite.setFlipped(true);  break;
 		case sf::Keyboard::Right: this->moveRight = true; this->playerSprite.setFlipped(false); break;
 		case sf::Keyboard::Down:  this->moveDown  = true; break;
-		case sf::Keyboard::Up:    this->moveUp    = true; break;
+		case sf::Keyboard::Up:    this->jump      = true; break;
 
 		default: break;
 		}
@@ -55,7 +56,7 @@ void Player::handleEvent(const sf::Event& event) {
 		case sf::Keyboard::Left:  this->moveLeft  = false; break;
 		case sf::Keyboard::Right: this->moveRight = false; break;
 		case sf::Keyboard::Down:  this->moveDown  = false; break;
-		case sf::Keyboard::Up:    this->moveUp    = false; break;
+		case sf::Keyboard::Up:    this->jump      = false; break;
 		default: break;
 		}
 	}
@@ -94,17 +95,25 @@ void Player::update(const sf::Time& dt) {
 		this->playerSprite.setAnimation(this->animationRest);
 	}
 
-	if (this->moveUp && this->grounded) {
-		this->dy = -0.7f;
+	if (this->jump && this->grounded) {
+		this->dy = -0.5f;
 		this->grounded = false;
-		this->moveUp = false;
+		this->jumping = true;
+	}
+
+	// Are we in the jumping state (jumping), but did we release the jump button?
+	// In that case, stop the jumping to control the player height finer grained.
+	if (this->jumping && !this->jump) {
+		// Stop the jumping state and reset the y acceleration.
+		this->jumping = false;
+		this->dy = 0.0f;
 	}
 
 	// 1. if not grounded. fall.
 	// 2. if collision, set grounded to true.
 	// 3. set player y position to top of tile
 	if (!this->grounded) {
-		this->dy += 0.2f * timeStep;
+		this->dy += 0.1f * timeStep;
 		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
 		if (this->isPlayerColliding(newBounds)) {
 			if (this->dy < 0.0f) {
@@ -123,6 +132,8 @@ void Player::update(const sf::Time& dt) {
 				this->grounded = true;
 				this->dy = 0.0f;
 			}
+
+			this->jumping = false;
 		}
 	}
 

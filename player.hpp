@@ -28,8 +28,10 @@ private:
 
 	bool moveLeft  = false;
 	bool moveRight = false;
-	bool moveUp    = false;
 	bool moveDown  = false;
+
+	bool jump      = false; //< True if we pressed the jump button.
+	bool jumping   = false; //< True if we are still jumping.
 public:
 	Player(const std::shared_ptr<Map>& map);
 	~Player();
