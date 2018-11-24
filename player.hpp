@@ -35,9 +35,10 @@ private:
 	bool jump      = false; //< True if we pressed the jump button.
 	bool jumping   = false; //< True if we are still jumping.
 public:
-	Player(const std::shared_ptr<Map>& map);
+	Player();
 	~Player();
 
+	void setMap(const std::shared_ptr<Map>& map);
 	void stop();
 	bool isPlayerColliding(const sf::FloatRect& bounds) const;
 	bool isStatic() const;

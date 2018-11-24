@@ -8,12 +8,14 @@
 #include "level.hpp"
 #include "player.hpp"
 #include "text.hpp"
+#include "util.hpp"
 
 int main() {
 	std::shared_ptr<Map> lolmap = std::make_shared<Map>();
 	lolmap->load("map01.tmx");
 
-	Player player(lolmap);
+	std::shared_ptr<Player> player = std::make_shared<Player>();
+	player->setMap(lolmap);
 
 	std::shared_ptr<ImageFont> font = std::make_shared<ImageFont>(
 		"font.png",
@@ -24,6 +26,12 @@ int main() {
 
 	float w = 320;
 	float h = 240;
+
+	Camera camera;
+	camera.setMap(lolmap);
+	camera.setPlayer(player);
+
+
 	sf::View derp({ w/2, h/2}, { w, h });
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
@@ -52,7 +60,7 @@ int main() {
 				}
 			}
 
-			player.handleEvent(event);
+			player->handleEvent(event);
 		}
 
 		std::stringstream ss;
@@ -62,18 +70,18 @@ int main() {
 		ss.str("");
 		ss
 			<< "Player at ("
-			<< static_cast<int>(player.getBounds().left) << ", "
-			<< static_cast<int>(player.getBounds().top) << ")";
+			<< static_cast<int>(player->getBounds().left) << ", "
+			<< static_cast<int>(player->getBounds().top) << ")";
 		t3.setText(0, 12, ss.str());
 
-		player.update(elapsed);
+		player->update(elapsed);
 
-		derp.setCenter({ player.getBounds().left, player.getBounds().top });
+		camera.update();
 
 		window.clear();
-		window.setView(derp);
+		window.setView(camera);
 		lolmap->drawBackgrounds(window);
-		window.draw(player);
+		window.draw(*player);
 		lolmap->drawForegrounds(window);
 		window.setView(window.getDefaultView());
 		window.draw(t2);

@@ -6,9 +6,7 @@
 #include "player.hpp"
 #include "text.hpp"
 
-Player::Player(const std::shared_ptr<Map>& map) {
-	this->map = map;
-
+Player::Player() {
 	if (!texture.loadFromFile("player.png")) {
 		throw "unable to load player texture";
 	}
@@ -44,6 +42,11 @@ Player::Player(const std::shared_ptr<Map>& map) {
 }
 
 Player::~Player() {
+	std::cout << "Player destroyed" << std::endl;
+}
+
+void Player::setMap(const std::shared_ptr<Map>& map) {
+	this->map = map;
 }
 
 void Player::handleEvent(const sf::Event& event) {
