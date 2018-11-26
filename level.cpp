@@ -181,9 +181,20 @@ bool Map::isColliding(const sf::FloatRect& objectBounds) const {
 	return false;
 }
 
+const sf::FloatRect Map::getBounds() const {
+	// TODO: this is rather "const" data and only needs to be calculated once.
+	sf::FloatRect r;
+	r.left = 0;
+	r.top = 0;
+	r.width = this->tmxMap.GetWidth() * this->tmxMap.GetTileWidth();
+	r.height = this->tmxMap.GetHeight() * this->tmxMap.GetTileHeight();
+	return r;
+}
+
 bool Map::isTileCollidable(int tilex, int tiley) const {
 	return this->collisionLayer->GetTileGid(tilex, tiley) > 0;
 }
+
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	// states.texture = &this->texture;

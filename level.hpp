@@ -50,8 +50,8 @@ public:
 	 * bounding box) will collide with a tile in the collision layer.
 	 */
 	bool isColliding(const sf::FloatRect& objectBounds) const;
+	const sf::FloatRect getBounds() const;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
 	void drawBackgrounds(sf::RenderTarget& target) const;
 	void drawForegrounds(sf::RenderTarget& target) const;
 };
