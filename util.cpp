@@ -19,6 +19,17 @@ void Camera::setMap(const std::shared_ptr<Map>& map) {
 	this->map = map;
 }
 
+void Camera::handleEvent(const sf::Event& event) {
+	if (event.type == sf::Event::MouseWheelScrolled) {
+		int multiplier = 60;
+		if (event.mouseWheelScroll.delta > 0) {
+			this->setSize(this->getSize().x - multiplier * 1.33f, this->getSize().y - multiplier);
+		} else if (event.mouseWheelScroll.delta < 0) {
+			this->setSize(this->getSize().x + multiplier * 1.33f, this->getSize().y + multiplier);
+		}
+	}
+}
+
 void Camera::update() {
 	const sf::FloatRect& pbounds = this->player->getBounds();
 	const sf::FloatRect& mbounds = this->map->getBounds();

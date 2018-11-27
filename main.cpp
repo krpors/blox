@@ -51,15 +51,8 @@ int main() {
 				default: break;
 				}
 			}
-			if (event.type == sf::Event::MouseWheelScrolled) {
-				int multiplier = 60;
-				if (event.mouseWheelScroll.delta > 0) {
-					derp.setSize(derp.getSize().x - multiplier * 1.33f, derp.getSize().y - multiplier);
-				} else if (event.mouseWheelScroll.delta < 0) {
-					derp.setSize(derp.getSize().x + multiplier * 1.33f, derp.getSize().y + multiplier);
-				}
-			}
 
+			camera.handleEvent(event);
 			player->handleEvent(event);
 		}
 

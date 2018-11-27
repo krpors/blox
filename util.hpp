@@ -18,7 +18,7 @@ public:
 
 	void setPlayer(const std::shared_ptr<Player>& player);
 	void setMap(const std::shared_ptr<Map>& map);
-
+	void handleEvent(const sf::Event& event);
 	void update();
 };
 
