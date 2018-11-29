@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <iostream>
+#include <random>
 #include <sstream>
 
 #include <SFML/Graphics.hpp>
@@ -11,6 +12,13 @@
 #include "util.hpp"
 
 int main() {
+	// std::mt19937 rng;
+	// rng.seed(std::random_device()());
+	// std::uniform_real_distribution<> dist(-1, 1);
+	// float f = dist(rng);
+
+	// return 0;
+
 	std::shared_ptr<Map> lolmap = std::make_shared<Map>();
 	lolmap->load("map01.tmx");
 
@@ -30,6 +38,8 @@ int main() {
 	Camera camera;
 	camera.setMap(lolmap);
 	camera.setPlayer(player);
+
+	ParticleGenerator pgen;
 
 
 	sf::View derp({ w/2, h/2}, { w, h });
@@ -68,11 +78,12 @@ int main() {
 		t3.setText(0, 12, ss.str());
 
 		player->update(elapsed);
-
 		camera.update();
+		pgen.update(elapsed);
 
 		window.clear();
 		window.setView(camera);
+		window.draw(pgen);
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);
 		lolmap->drawForegrounds(window);

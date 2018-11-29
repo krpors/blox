@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <cmath>
+#include <iostream>
+#include <random>
 
 Camera::Camera() {
 	this->setSize(320, 240);
@@ -48,4 +50,62 @@ void Camera::update() {
 	float cy = std::min(ymax, std::max(ymin, pbounds.top));
 
 	setCenter(cx, cy);
+}
+
+//===
+Particle::Particle(float maxLife) :
+	maximumLife(maxLife) {
+}
+
+Particle::~Particle() {
+}
+//===
+
+
+ParticleGenerator::ParticleGenerator() {
+	rng.seed(std::random_device()());
+	dist = std::uniform_real_distribution<>(-2, 2);
+
+	std::uniform_real_distribution<> dist2(100, 3000);
+
+	for (int i = 0; i < 200; i++) {
+		Particle p(dist2(this->rng));
+		this->resetParticle(p);
+		this->particles.push_back(p);
+	}
+}
+
+ParticleGenerator::~ParticleGenerator() {
+}
+
+void ParticleGenerator::resetParticle(Particle& p) {
+		p.pos.x = 200;
+		p.pos.y = 200;
+		p.dir.x = this->dist(this->rng);
+		p.dir.y = this->dist(this->rng);
+		p.currentLife = p.maximumLife;
+		p.color = sf::Color(255, 255, 255);
+}
+
+void ParticleGenerator::update(const sf::Time& dt) {
+	for (auto &p : this->particles) {
+		p.pos.x += 0.1f * p.dir.x;
+		p.pos.y += 0.1f * p.dir.y;
+		p.currentLife -= dt.asMilliseconds();
+		if (p.currentLife <= 0) {
+			this->resetParticle(p);
+		}
+	}
+}
+
+void ParticleGenerator::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	sf::VertexArray arr(sf::Points);
+	for (const auto& p : this->particles) {
+		sf::Vertex vertex;
+		vertex.position = { p.pos.x, p.pos.y };
+		vertex.color = p.color;
+		arr.append(vertex);
+	}
+
+	target.draw(arr);
 }

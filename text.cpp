@@ -4,7 +4,6 @@
 #include <sstream>
 
 #include "text.hpp"
-#include "util.hpp"
 
 ImageFont::ImageFont() {
 }
