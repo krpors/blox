@@ -21,6 +21,7 @@ public:
 	~ImageFont();
 
 	void load(const std::string& file, const std::string& glyphs);
+	int getFontHeight() const;
 	const std::map<char, sf::IntRect> getGlyphMap() const;
 	const sf::Texture& getTexture() const;
 };

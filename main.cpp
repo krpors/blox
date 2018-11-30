@@ -30,7 +30,6 @@ int main() {
 		" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
 
 	Text t2(font);
-	Text t3(font);
 
 	float w = 320;
 	float h = 240;
@@ -45,6 +44,9 @@ int main() {
 	sf::View derp({ w/2, h/2}, { w, h });
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
+	window.setVerticalSyncEnabled(true);
+
+	FpsCounter fps;
 
 	sf::Clock clock;
 	while (window.isOpen()) {
@@ -67,29 +69,33 @@ int main() {
 		}
 
 		std::stringstream ss;
-		ss << "The elapsed time is " << std::setfill(' ') << std::setw(5) << elapsed.asMicroseconds() << " microseconds.";
-		t2.setText(0, 0, ss.str());
-
-		ss.str("");
 		ss
+			<< "The elapsed time is "
+				<< std::setfill(' ')
+				<< std::setw(5)
+				<< elapsed.asMicroseconds()
+				<< " microseconds."
+				<< std::endl
 			<< "Player at ("
-			<< static_cast<int>(player->getBounds().left) << ", "
-			<< static_cast<int>(player->getBounds().top) << ")";
-		t3.setText(0, 12, ss.str());
+				<< static_cast<int>(player->getBounds().left) << ", "
+				<< static_cast<int>(player->getBounds().top) << ")"
+				<< std::endl
+			<< "FPS: " << fps.getFps() << std::endl;
+		t2.setText(0, 0, ss.str());
 
 		player->update(elapsed);
 		camera.update();
 		pgen.update(elapsed);
+		fps.update(elapsed);
 
 		window.clear();
 		window.setView(camera);
-		window.draw(pgen);
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);
 		lolmap->drawForegrounds(window);
 		window.setView(window.getDefaultView());
 		window.draw(t2);
-		window.draw(t3);
+		window.draw(pgen);
 		window.display();
 	}
 

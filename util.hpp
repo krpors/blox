@@ -9,6 +9,19 @@
 #include "level.hpp"
 #include "player.hpp"
 
+class FpsCounter {
+private:
+	sf::Time timer;
+	unsigned int fps;
+	unsigned int frameCounter;
+public:
+	FpsCounter();
+	~FpsCounter();
+
+	void update(const sf::Time& delta);
+	unsigned int getFps() const;
+};
+
 class Camera : public sf::View {
 private:
 	std::shared_ptr<Player> player;

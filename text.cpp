@@ -79,6 +79,10 @@ void ImageFont::load(const std::string& file, const std::string& glyphs) {
 	std::clog << "Initialized ImageFont with " << glyphCount << " glyphs" << std::endl;
 }
 
+int ImageFont::getFontHeight() const {
+	return this->image.getSize().y;
+}
+
 const std::map<char, sf::IntRect> ImageFont::getGlyphMap() const {
 	return this->glyphMap;
 }
@@ -118,7 +122,12 @@ void Text::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	sf::Vector2f position = getPosition();
 	const std::map<char, sf::IntRect>& map = this->font->getGlyphMap();
 	for (const char& c : this->text) {
-		sf::Text t;
+		if (c == '\n') {
+			position.x = getPosition().x;
+			position.y += this->font->getFontHeight();
+			continue;
+		}
+
 		auto search = map.find(c);
 		if (search != map.end()) {
 			sf::IntRect texrect = search->second;
