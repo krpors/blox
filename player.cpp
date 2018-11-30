@@ -20,7 +20,7 @@ Player::Player() {
 	this->animationRest.addFrame({ 32, 0, 16, 16});
 	this->animationRest.addFrame({ 48, 0, 16, 16});
 
-	this->animationWalk.setFrameTime(sf::milliseconds(50));
+	this->animationWalk.setFrameTime(sf::milliseconds(35));
 	this->animationWalk.addFrame({ 0,  16, 16, 16 });
 	this->animationWalk.addFrame({ 16, 16, 16, 16 });
 	this->animationWalk.addFrame({ 32, 16, 16, 16 });
@@ -82,13 +82,13 @@ bool Player::isStatic() const {
 void Player::update(const sf::Time& dt) {
 	sf::FloatRect newBounds = this->bounds;
 
-	float timeStep = dt.asMicroseconds() / 100000.0f;
+	float timeStep = dt.asSeconds();
 
 	if (this->moveLeft) {
-		newBounds.left -= 24.0f * timeStep;
+		newBounds.left -= 170.0f * timeStep;
 	}
 	if (this->moveRight) {
-		newBounds.left += 24.0f * timeStep;
+		newBounds.left += 170.0f * timeStep;
 	}
 
 	if (this->moveLeft || this->moveRight) {
@@ -134,7 +134,7 @@ void Player::update(const sf::Time& dt) {
 	// 2. if collision, set grounded to true.
 	// 3. set player y position to top of tile
 	if (!this->grounded) {
-		this->dy += 0.1f * timeStep;
+		this->dy += 1.2f * timeStep;
 		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
 		if (this->isPlayerColliding(newBounds)) {
 			if (this->dy < 0.0f) {

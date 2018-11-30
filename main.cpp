@@ -70,12 +70,6 @@ int main() {
 
 		std::stringstream ss;
 		ss
-			<< "The elapsed time is "
-				<< std::setfill(' ')
-				<< std::setw(5)
-				<< elapsed.asMicroseconds()
-				<< " microseconds."
-				<< std::endl
 			<< "Player at ("
 				<< static_cast<int>(player->getBounds().left) << ", "
 				<< static_cast<int>(player->getBounds().top) << ")"
@@ -93,9 +87,9 @@ int main() {
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);
 		lolmap->drawForegrounds(window);
+		window.draw(pgen);
 		window.setView(window.getDefaultView());
 		window.draw(t2);
-		window.draw(pgen);
 		window.display();
 	}
 
