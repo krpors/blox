@@ -111,7 +111,7 @@ void Player::update(const sf::Time& dt) {
 	}
 
 	if (this->jump && this->grounded) {
-		this->dy = -0.5f;
+		this->dy = -300.0f;
 		this->grounded = false;
 		this->jumping = true;
 	}
@@ -134,8 +134,8 @@ void Player::update(const sf::Time& dt) {
 	// 2. if collision, set grounded to true.
 	// 3. set player y position to top of tile
 	if (!this->grounded) {
-		this->dy += 1.2f * timeStep;
-		newBounds.top += this->dy * (dt.asMicroseconds() / 1000.0f);
+		this->dy += 450.0f * timeStep;
+		newBounds.top += this->dy * timeStep;
 		if (this->isPlayerColliding(newBounds)) {
 			if (this->dy < 0.0f) {
 				// When we collide while moving up it means we hit a ceiling tile.
