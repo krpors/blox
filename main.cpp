@@ -46,6 +46,9 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 
+	sf::View bgView;
+	Background bg;
+
 	FpsCounter fps;
 
 	sf::Clock clock;
@@ -68,13 +71,17 @@ int main() {
 			player->handleEvent(event);
 		}
 
+		bgView.setSize(camera.getSize().x * 2, camera.getSize().y * 2);
+		bgView.setCenter(camera.getCenter().x, camera.getCenter().y);
+
 		std::stringstream ss;
 		ss
 			<< "Player at ("
 				<< static_cast<int>(player->getBounds().left) << ", "
 				<< static_cast<int>(player->getBounds().top) << ")"
 				<< std::endl
-			<< "FPS: " << fps.getFps() << std::endl;
+			<< "FPS: " << fps.getFps() << std::endl
+			<< "Camera at (" << camera.getCenter().x << ", " << camera.getCenter().y << std::endl;
 		t2.setText(0, 0, ss.str());
 
 		player->update(elapsed);
@@ -83,6 +90,8 @@ int main() {
 		fps.update(elapsed);
 
 		window.clear();
+		window.setView(bgView);
+		window.draw(bg);
 		window.setView(camera);
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);

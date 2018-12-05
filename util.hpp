@@ -22,6 +22,8 @@ public:
 	unsigned int getFps() const;
 };
 
+//==============================================================================
+
 class Camera : public sf::View {
 private:
 	std::shared_ptr<Player> player;
@@ -36,6 +38,8 @@ public:
 	void update();
 };
 
+//==============================================================================
+
 class Particle {
 public:
 	sf::Vector2f pos;
@@ -47,6 +51,8 @@ public:
 	Particle(float maxLife);
 	~Particle();
 };
+
+//==============================================================================
 
 class ParticleGenerator : public sf::Drawable {
 private:
@@ -60,7 +66,19 @@ public:
 
 	void resetParticle(Particle& p);
 	void update(const sf::Time& dt);
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+};
+
+//==============================================================================
+
+class Background : public sf::Drawable {
+private:
+	sf::Texture texture;
+public:
+	Background();
+	~Background();
+
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 #endif // UTIL_HPP

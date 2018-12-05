@@ -173,6 +173,9 @@ const sf::FloatRect& Player::getBounds() const {
 }
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	target.draw(this->playerSprite, states);
+
+#if 0
 	sf::RectangleShape collisionBounds;
 	collisionBounds.setSize({ this->bounds.width, this->bounds.height});
 	collisionBounds.setFillColor(sf::Color::Transparent);
@@ -186,8 +189,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	globBoundsRect.setOutlineColor(sf::Color::Magenta);
 	globBoundsRect.setOutlineThickness(1.0f);
 	globBoundsRect.setPosition({ this->playerSprite.getGlobalBounds().left, this->playerSprite.getGlobalBounds().top});
-
-	target.draw(this->playerSprite, states);
 	target.draw(collisionBounds, states);
 	target.draw(globBoundsRect, states);
+#endif
 }

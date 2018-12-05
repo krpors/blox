@@ -139,3 +139,18 @@ void ParticleGenerator::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
 	target.draw(arr);
 }
+
+//==============================================================================
+
+Background::Background() {
+	this->texture.loadFromFile("sheet.png");
+}
+
+Background::~Background() {
+}
+
+void Background::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	sf::Sprite s;
+	s.setTexture(this->texture);
+	target.draw(s, states);
+}
