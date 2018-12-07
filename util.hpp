@@ -71,6 +71,21 @@ public:
 
 //==============================================================================
 
+/**
+ * A parallax view is basically just a view which can be used to support
+ * parallax background or foreground scrolling.
+ */
+class ParallaxView : public sf::View {
+private:
+	std::shared_ptr<Player> player;
+	std::shared_ptr<Camera> camera;
+public:
+	ParallaxView(const std::shared_ptr<Player>& p, const std::shared_ptr<Camera>& c);
+	~ParallaxView();
+
+	void update();
+};
+
 class Background : public sf::Drawable {
 private:
 	sf::Texture texture;

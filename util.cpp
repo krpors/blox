@@ -142,8 +142,36 @@ void ParticleGenerator::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
 //==============================================================================
 
+ParallaxView::ParallaxView(const std::shared_ptr<Player>& p, const std::shared_ptr<Camera>& c) :
+	player(p), camera(c) {
+}
+
+ParallaxView::~ParallaxView() {
+}
+
+void ParallaxView::update() {
+	// f is the factor of resizing the viewport.
+	float f = 1.1;
+	float w = this->camera->getSize().x / f;
+	float h = this->camera->getSize().y / f;
+
+	// get the difference in viewport size, using the original player cam.
+	float diffx = w - this->camera->getSize().x;
+	float diffy = h - this->camera->getSize().y;
+
+	// Divide the difference to get the adjustments. This is used to properly
+	// place the (0, 0) coordinate to the top left based on the player camera.
+	float adjustmentx = diffx / 2.0f;
+	float adjustmenty = diffy / 2.0f;
+
+	this->setSize(w, h);
+	this->setCenter(this->camera->getCenter().x + adjustmentx, this->camera->getCenter().y + adjustmenty);
+}
+
+//==============================================================================
+
 Background::Background() {
-	this->texture.loadFromFile("sheet.png");
+	this->texture.loadFromFile("background.png");
 }
 
 Background::~Background() {

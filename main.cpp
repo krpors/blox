@@ -31,22 +31,16 @@ int main() {
 
 	Text t2(font);
 
-	float w = 320;
-	float h = 240;
-
-	Camera camera;
-	camera.setMap(lolmap);
-	camera.setPlayer(player);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+	camera->setMap(lolmap);
+	camera->setPlayer(player);
 
 	ParticleGenerator pgen;
-
-
-	sf::View derp({ w/2, h/2}, { w, h });
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 
-	sf::View bgView;
+	ParallaxView bgView(player, camera);
 	Background bg;
 
 	FpsCounter fps;
@@ -67,12 +61,9 @@ int main() {
 				}
 			}
 
-			camera.handleEvent(event);
+			camera->handleEvent(event);
 			player->handleEvent(event);
 		}
-
-		bgView.setSize(camera.getSize().x * 2, camera.getSize().y * 2);
-		bgView.setCenter(camera.getCenter().x, camera.getCenter().y);
 
 		std::stringstream ss;
 		ss
@@ -81,18 +72,25 @@ int main() {
 				<< static_cast<int>(player->getBounds().top) << ")"
 				<< std::endl
 			<< "FPS: " << fps.getFps() << std::endl
-			<< "Camera at (" << camera.getCenter().x << ", " << camera.getCenter().y << std::endl;
+			<< "Camera at (" << camera->getCenter().x << ", " << camera->getCenter().y << ")" << std::endl
+			<< "Camera size is " << camera->getSize().x << " x " << camera->getSize().y << std::endl
+			<< "Bg view size is " << bgView.getSize().x << " x " << bgView.getSize().y << std::endl;
 		t2.setText(0, 0, ss.str());
 
+		// Note: the order of updating camera, player and background view
+		// is important so you don't get a "jittery" effect when drawing the
+		// backgrounds first.
+		camera->update();
 		player->update(elapsed);
-		camera.update();
+		bgView.update();
+
 		pgen.update(elapsed);
 		fps.update(elapsed);
 
 		window.clear();
 		window.setView(bgView);
 		window.draw(bg);
-		window.setView(camera);
+		window.setView(*camera);
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);
 		lolmap->drawForegrounds(window);
