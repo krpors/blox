@@ -88,11 +88,16 @@ public:
 
 class Background : public sf::Drawable {
 private:
+	float left = 0;
+	float top = 0;
+	int width = 0;
+	int height = 0;
 	sf::Texture texture;
 public:
 	Background();
 	~Background();
 
+	void update(const Camera& cam);
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 

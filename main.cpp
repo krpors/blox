@@ -40,7 +40,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Blox", sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 
-	ParallaxView bgView(player, camera);
+	// ParallaxView bgView(player, camera);
 	Background bg;
 
 	FpsCounter fps;
@@ -74,7 +74,8 @@ int main() {
 			<< "FPS: " << fps.getFps() << std::endl
 			<< "Camera at (" << camera->getCenter().x << ", " << camera->getCenter().y << ")" << std::endl
 			<< "Camera size is " << camera->getSize().x << " x " << camera->getSize().y << std::endl
-			<< "Bg view size is " << bgView.getSize().x << " x " << bgView.getSize().y << std::endl;
+			// << "Bg view size is " << bgView.getSize().x << " x " << bgView.getSize().y << std::endl
+			;
 		t2.setText(0, 0, ss.str());
 
 		// Note: the order of updating camera, player and background view
@@ -82,15 +83,16 @@ int main() {
 		// backgrounds first.
 		camera->update();
 		player->update(elapsed);
-		bgView.update();
+		// bgView.update();
+		bg.update(*camera);
 
 		pgen.update(elapsed);
 		fps.update(elapsed);
 
 		window.clear();
-		window.setView(bgView);
-		window.draw(bg);
+		// window.setView(bgView);
 		window.setView(*camera);
+		window.draw(bg);
 		lolmap->drawBackgrounds(window);
 		window.draw(*player);
 		lolmap->drawForegrounds(window);

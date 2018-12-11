@@ -151,7 +151,7 @@ ParallaxView::~ParallaxView() {
 
 void ParallaxView::update() {
 	// f is the factor of resizing the viewport.
-	float f = 1.1;
+	float f = 1.2f;
 	float w = this->camera->getSize().x / f;
 	float h = this->camera->getSize().y / f;
 
@@ -171,14 +171,25 @@ void ParallaxView::update() {
 //==============================================================================
 
 Background::Background() {
-	this->texture.loadFromFile("background.png");
+	this->texture.loadFromFile("wood.png");
+	this->texture.setRepeated(true);
 }
 
 Background::~Background() {
 }
 
+void Background::update(const Camera& cam) {
+	// hack to properly 'size' the texture rect somewhat
+	this->left = 0;
+	this->top = 0;
+	this->width = cam.getSize().x + cam.getCenter().x;
+	this->height = cam.getSize().y + cam.getCenter().y;
+}
+
 void Background::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	sf::Sprite s;
-	s.setTexture(this->texture);
-	target.draw(s, states);
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setPosition({ this->left, this->top});
+	sprite.setTextureRect({ 0, 0, this->width, this->height });
+	target.draw(sprite, states);
 }
