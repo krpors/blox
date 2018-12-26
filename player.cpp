@@ -11,8 +11,8 @@ Player::Player() {
 		throw "unable to load player texture";
 	}
 
-	this->bounds = { 37, 33, 16, 24 };
-	this->grounded = true;
+	this->bounds = { 37, 33, 8, 16 };
+	this->grounded = false;
 
 	this->animationRest.setFrameTime(sf::milliseconds(100));
 	this->animationRest.addFrame({ 0,  0, 16, 16});
@@ -37,7 +37,7 @@ Player::Player() {
 	this->playerSprite.setAnimation(animationWalk);
 	this->playerSprite.setTexture(this->texture);
 	this->playerSprite.setOrigin({ 8, 8 });
-	this->playerSprite.setScale({ 2, 2 });
+	this->playerSprite.setScale({ 1, 1 });
 	this->playerSprite.setPlaying(true);
 }
 
@@ -137,11 +137,13 @@ void Player::update(const sf::Time& dt) {
 		this->dy += 450.0f * timeStep;
 		newBounds.top += this->dy * timeStep;
 		if (this->isPlayerColliding(newBounds)) {
+			float tw = 16.0f;
+
 			if (this->dy < 0.0f) {
 				// When we collide while moving up it means we hit a ceiling tile.
 				// Align the player's top to the bottom of the tile.
 				std::cout << "I was jumping newbounds: " << newBounds.top << std::endl;
-				int newy = static_cast<int>(newBounds.top / 32.0) * 32 + 1 + 32;
+				int newy = static_cast<int>(newBounds.top / tw) * tw + 1 + tw;
 				newBounds.top = newy;
 				std::cout << "NEWBOUNDS " << newBounds.top << std::endl;
 				this->dy = 0.0f;
@@ -149,12 +151,9 @@ void Player::update(const sf::Time& dt) {
 				// When we collidge while moving dow it means we hit the 'ground'.
 				// In that case, align the bottom of the player to the top of the
 				// tile, and ground ourselves.
-				int newy = static_cast<int>(newBounds.top / 32.0) * 32 - 1 + 32;
-				std::cout
-					<< "Newbounds top: " << newBounds.top
-					<< ", newy = " << newy
-					<< std::endl;
-				newBounds.top = newy - newBounds.height;
+				int tilePlayerBottom = static_cast<int>((newBounds.top + newBounds.height) / tw);
+				int bleh = tilePlayerBottom * tw;
+				newBounds.top = bleh - newBounds.height - 1;
 				this->grounded = true;
 				this->dy = 0.0f;
 			}
@@ -165,7 +164,7 @@ void Player::update(const sf::Time& dt) {
 
 	this->playerSprite.update(dt);
 	this->bounds = newBounds;
-	this->playerSprite.setPosition({ bounds.left + 8, bounds.top + 10 });
+	this->playerSprite.setPosition({ bounds.left + 4, bounds.top + 10 });
 }
 
 const sf::FloatRect& Player::getBounds() const {

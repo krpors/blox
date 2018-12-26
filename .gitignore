@@ -34,3 +34,4 @@ main
 
 # IDE/Editor based files and folders
 .vscode
+.gdb_history
