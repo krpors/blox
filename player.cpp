@@ -11,7 +11,7 @@ Player::Player() {
 		throw "unable to load player texture";
 	}
 
-	this->bounds = { 37, 33, 8, 16 };
+	this->bounds = { 48, 33, 8, 12 };
 	this->grounded = false;
 
 	this->animationRest.setFrameTime(sf::milliseconds(100));
@@ -164,7 +164,7 @@ void Player::update(const sf::Time& dt) {
 
 	this->playerSprite.update(dt);
 	this->bounds = newBounds;
-	this->playerSprite.setPosition({ bounds.left + 4, bounds.top + 10 });
+	this->playerSprite.setPosition({ bounds.left + 4, bounds.top + 6 });
 }
 
 const sf::FloatRect& Player::getBounds() const {
@@ -174,7 +174,7 @@ const sf::FloatRect& Player::getBounds() const {
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(this->playerSprite, states);
 
-#if 0
+#if 1
 	sf::RectangleShape collisionBounds;
 	collisionBounds.setSize({ this->bounds.width, this->bounds.height});
 	collisionBounds.setFillColor(sf::Color::Transparent);
